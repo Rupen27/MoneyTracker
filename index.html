@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Fees and Coin Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Personal finance dashboard</p>
+        <h1>Track school fees and saved coins in one place.</h1>
+        <p class="hero-text">
+          Built from your Excel workbook with separate logs for school payments and coin savings.
+          Add new entries anytime, see totals update instantly, and keep everything saved on this device.
+        </p>
+      </div>
+      <div class="hero-card">
+        <p class="hero-card-label">Current snapshot</p>
+        <div class="hero-meter">
+          <span class="hero-meter-label">Money tracked</span>
+          <div class="hero-meter-bar">
+            <div id="heroMeterFill" class="hero-meter-fill"></div>
+          </div>
+        </div>
+        <div class="hero-card-grid">
+          <div>
+            <span>Coins saved</span>
+            <strong id="coinsTotalHero">$0.00</strong>
+          </div>
+          <div>
+            <span>School fees paid</span>
+            <strong id="schoolTotalHero">$0.00</strong>
+          </div>
+          <div>
+            <span>Coin entries</span>
+            <strong id="coinCountHero">0</strong>
+          </div>
+          <div>
+            <span>School payments</span>
+            <strong id="schoolCountHero">0</strong>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="summary-grid">
+        <article class="summary-card summary-card-coins">
+          <p class="summary-label">Coins total</p>
+          <h2 id="coinsTotal">$0.00</h2>
+          <div id="coinsBreakdown" class="coin-breakdown"></div>
+        </article>
+        <article class="summary-card summary-card-school">
+          <p class="summary-label">School fees total</p>
+          <h2 id="schoolTotal">$0.00</h2>
+          <div id="schoolBreakdown" class="school-breakdown"></div>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Add coins</p>
+              <h3>New coin entry</h3>
+            </div>
+          </div>
+          <form id="coinForm" class="entry-form">
+            <label>
+              Coin type
+              <select name="coinType" required>
+                <option value="">Choose a coin</option>
+                <option value="5 cents">5 cents</option>
+                <option value="10 cents">10 cents</option>
+                <option value="20 cents">20 cents</option>
+                <option value="50 cents">50 cents</option>
+                <option value="1 dollar">1 dollar</option>
+              </select>
+            </label>
+            <label>
+              Quantity
+              <input type="number" name="quantity" min="1" step="1" required>
+            </label>
+            <label>
+              Date and time
+              <input type="datetime-local" name="dateTime" required>
+            </label>
+            <button type="submit">Add coin entry</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Add payment</p>
+              <h3>New school fee payment</h3>
+            </div>
+          </div>
+          <form id="schoolForm" class="entry-form">
+            <label>
+              Payment date
+              <input type="date" name="paymentDate" required>
+            </label>
+            <label>
+              Description
+              <input type="text" name="description" list="schoolDescriptions" placeholder="Exam fees, tuition..." required>
+            </label>
+            <label>
+              Amount
+              <input type="number" name="amount" min="0" step="0.01" required>
+            </label>
+            <button type="submit">Add school payment</button>
+          </form>
+          <datalist id="schoolDescriptions">
+            <option value="Exam fees"></option>
+            <option value="Resit for exam"></option>
+            <option value="uol account"></option>
+            <option value="maths tuition"></option>
+            <option value="tuition"></option>
+            <option value="year 2 sch fees"></option>
+            <option value="year 1 sch fees"></option>
+            <option value="tuiton"></option>
+            <option value="vle"></option>
+            <option value="exam fees"></option>
+          </datalist>
+        </section>
+      </section>
+
+      <section class="content-grid">
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Coin history</p>
+              <h3>Saved coins log</h3>
+            </div>
+            <button type="button" class="ghost-button" id="resetCoins">Reset coin data</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Coin type</th>
+                  <th>Quantity</th>
+                  <th>Value</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="coinTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">School history</p>
+              <h3>School fee payments log</h3>
+            </div>
+            <button type="button" class="ghost-button" id="resetSchool">Reset school data</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date added</th>
+                  <th>Payment date</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="schoolTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <tr>
+      <td colspan="6" class="empty-state">No entries yet.</td>
+    </tr>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
