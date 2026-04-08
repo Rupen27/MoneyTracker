@@ -65,9 +65,18 @@ const coinForm = document.querySelector("#coinForm");
 const schoolForm = document.querySelector("#schoolForm");
 const coinTableBody = document.querySelector("#coinTableBody");
 const schoolTableBody = document.querySelector("#schoolTableBody");
+const viewTabs = document.querySelectorAll(".view-tab");
+const viewPanels = document.querySelectorAll(".view-panel");
+const VIEW_STORAGE_KEY = "school-fee-coin-tracker-view";
 
 document.querySelector('input[name="dateTime"]').value = toDateTimeLocalValue(new Date());
 document.querySelector('input[name="paymentDate"]').value = toDateInputValue(new Date());
+
+viewTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setActiveView(tab.dataset.viewTarget);
+  });
+});
 
 coinForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -133,21 +142,29 @@ schoolTableBody.addEventListener("click", (event) => {
 });
 
 render();
+setActiveView(localStorage.getItem(VIEW_STORAGE_KEY) || "overview");
 
 function render() {
   const coinSummary = buildCoinSummary(state.coins);
   const schoolTotal = sum(state.school.map((entry) => entry.amount));
   const schoolByDescription = summarizeByDescription(state.school);
+  const trackedTotal = coinSummary.total + schoolTotal;
+  const schoolPercent = trackedTotal === 0 ? 0 : (schoolTotal / trackedTotal) * 100;
 
   updateText("#coinsTotal", formatCurrency(coinSummary.total));
+  updateText("#coinsTotalView", formatCurrency(coinSummary.total));
   updateText("#coinsTotalHero", formatCurrency(coinSummary.total));
   updateText("#coinCountHero", String(state.coins.length));
-  renderCoinBreakdown(coinSummary.byType);
+  renderCoinBreakdown(coinSummary.byType, "#coinsBreakdown");
+  renderCoinBreakdown(coinSummary.byType, "#coinsBreakdownView");
 
   updateText("#schoolTotal", formatCurrency(schoolTotal));
+  updateText("#schoolTotalView", formatCurrency(schoolTotal));
   updateText("#schoolTotalHero", formatCurrency(schoolTotal));
   updateText("#schoolCountHero", String(state.school.length));
-  renderSchoolBreakdown(schoolByDescription);
+  renderSchoolBreakdown(schoolByDescription, "#schoolBreakdown");
+  renderSchoolBreakdown(schoolByDescription, "#schoolBreakdownView");
+  document.querySelector("#heroMeterFill").style.width = `${schoolPercent}%`;
 
   renderCoinTable(state.coins);
   renderSchoolTable(state.school);
@@ -179,8 +196,8 @@ function renderCoinTable(entries) {
     .join("");
 }
 
-function renderCoinBreakdown(byType) {
-  const container = document.querySelector("#coinsBreakdown");
+function renderCoinBreakdown(byType, selector) {
+  const container = document.querySelector(selector);
   if (!container) {
     return;
   }
@@ -196,8 +213,8 @@ function renderCoinBreakdown(byType) {
     .join("");
 }
 
-function renderSchoolBreakdown(descriptionTotals) {
-  const container = document.querySelector("#schoolBreakdown");
+function renderSchoolBreakdown(descriptionTotals, selector) {
+  const container = document.querySelector(selector);
   if (!container) {
     return;
   }
@@ -361,4 +378,18 @@ function parseStoredDate(value) {
   }
 
   return new Date(value);
+}
+
+function setActiveView(view) {
+  viewTabs.forEach((tab) => {
+    const isActive = tab.dataset.viewTarget === view;
+    tab.classList.toggle("is-active", isActive);
+    tab.setAttribute("aria-selected", String(isActive));
+  });
+
+  viewPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.id === `view-${view}`);
+  });
+
+  localStorage.setItem(VIEW_STORAGE_KEY, view);
 }

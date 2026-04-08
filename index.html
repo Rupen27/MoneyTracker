@@ -52,136 +52,168 @@
     </header>
 
     <main class="dashboard">
-      <section class="summary-grid">
-        <article class="summary-card summary-card-coins">
-          <p class="summary-label">Coins total</p>
-          <h2 id="coinsTotal">$0.00</h2>
-          <div id="coinsBreakdown" class="coin-breakdown"></div>
-        </article>
-        <article class="summary-card summary-card-school">
-          <p class="summary-label">School fees total</p>
-          <h2 id="schoolTotal">$0.00</h2>
-          <div id="schoolBreakdown" class="school-breakdown"></div>
-        </article>
+      <section class="view-picker panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Choose your view</p>
+            <h3>Open one section at a time</h3>
+          </div>
+        </div>
+        <div class="view-switcher" role="tablist" aria-label="Tracker views">
+          <button type="button" class="view-tab is-active" data-view-target="overview" aria-selected="true">Overview</button>
+          <button type="button" class="view-tab" data-view-target="coins" aria-selected="false">Coins</button>
+          <button type="button" class="view-tab" data-view-target="school" aria-selected="false">School Fees</button>
+        </div>
       </section>
 
-      <section class="content-grid">
-        <section class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Add coins</p>
-              <h3>New coin entry</h3>
-            </div>
-          </div>
-          <form id="coinForm" class="entry-form">
-            <label>
-              Coin type
-              <select name="coinType" required>
-                <option value="">Choose a coin</option>
-                <option value="5 cents">5 cents</option>
-                <option value="10 cents">10 cents</option>
-                <option value="20 cents">20 cents</option>
-                <option value="50 cents">50 cents</option>
-                <option value="1 dollar">1 dollar</option>
-              </select>
-            </label>
-            <label>
-              Quantity
-              <input type="number" name="quantity" min="1" step="1" required>
-            </label>
-            <label>
-              Date and time
-              <input type="datetime-local" name="dateTime" required>
-            </label>
-            <button type="submit">Add coin entry</button>
-          </form>
-        </section>
-
-        <section class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Add payment</p>
-              <h3>New school fee payment</h3>
-            </div>
-          </div>
-          <form id="schoolForm" class="entry-form">
-            <label>
-              Payment date
-              <input type="date" name="paymentDate" required>
-            </label>
-            <label>
-              Description
-              <input type="text" name="description" list="schoolDescriptions" placeholder="Exam fees, tuition..." required>
-            </label>
-            <label>
-              Amount
-              <input type="number" name="amount" min="0" step="0.01" required>
-            </label>
-            <button type="submit">Add school payment</button>
-          </form>
-          <datalist id="schoolDescriptions">
-            <option value="Exam fees"></option>
-            <option value="Resit for exam"></option>
-            <option value="uol account"></option>
-            <option value="maths tuition"></option>
-            <option value="tuition"></option>
-            <option value="year 2 sch fees"></option>
-            <option value="year 1 sch fees"></option>
-            <option value="tuiton"></option>
-            <option value="vle"></option>
-            <option value="exam fees"></option>
-          </datalist>
+      <section id="view-overview" class="view-panel is-active">
+        <section class="summary-grid summary-grid-single">
+          <article class="summary-card summary-card-coins">
+            <p class="summary-label">Coins total</p>
+            <h2 id="coinsTotal">$0.00</h2>
+            <div id="coinsBreakdown" class="coin-breakdown"></div>
+          </article>
+          <article class="summary-card summary-card-school">
+            <p class="summary-label">School fees total</p>
+            <h2 id="schoolTotal">$0.00</h2>
+            <div id="schoolBreakdown" class="school-breakdown"></div>
+          </article>
         </section>
       </section>
 
-      <section class="content-grid">
-        <section class="panel panel-wide">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Coin history</p>
-              <h3>Saved coins log</h3>
-            </div>
-            <button type="button" class="ghost-button" id="resetCoins">Reset coin data</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Coin type</th>
-                  <th>Quantity</th>
-                  <th>Value</th>
-                  <th>Total</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="coinTableBody"></tbody>
-            </table>
-          </div>
-        </section>
+      <section id="view-coins" class="view-panel">
+        <section class="section-stack">
+          <article class="summary-card summary-card-coins">
+            <p class="summary-label">Coins total</p>
+            <h2 id="coinsTotalView">$0.00</h2>
+            <div id="coinsBreakdownView" class="coin-breakdown"></div>
+          </article>
 
-        <section class="panel panel-wide">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">School history</p>
-              <h3>School fee payments log</h3>
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Add coins</p>
+                <h3>New coin entry</h3>
+              </div>
             </div>
-            <button type="button" class="ghost-button" id="resetSchool">Reset school data</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date added</th>
-                  <th>Payment date</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="schoolTableBody"></tbody>
-            </table>
-          </div>
+            <form id="coinForm" class="entry-form">
+              <label>
+                Coin type
+                <select name="coinType" required>
+                  <option value="">Choose a coin</option>
+                  <option value="5 cents">5 cents</option>
+                  <option value="10 cents">10 cents</option>
+                  <option value="20 cents">20 cents</option>
+                  <option value="50 cents">50 cents</option>
+                  <option value="1 dollar">1 dollar</option>
+                </select>
+              </label>
+              <label>
+                Quantity
+                <input type="number" name="quantity" min="1" step="1" required>
+              </label>
+              <label>
+                Date and time
+                <input type="datetime-local" name="dateTime" required>
+              </label>
+              <button type="submit">Add coin entry</button>
+            </form>
+          </section>
+
+          <section class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Coin history</p>
+                <h3>Saved coins log</h3>
+              </div>
+              <button type="button" class="ghost-button" id="resetCoins">Reset coin data</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Coin type</th>
+                    <th>Quantity</th>
+                    <th>Value</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="coinTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section id="view-school" class="view-panel">
+        <section class="section-stack">
+          <article class="summary-card summary-card-school">
+            <p class="summary-label">School fees total</p>
+            <h2 id="schoolTotalView">$0.00</h2>
+            <div id="schoolBreakdownView" class="school-breakdown"></div>
+          </article>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Add payment</p>
+                <h3>New school fee payment</h3>
+              </div>
+            </div>
+            <form id="schoolForm" class="entry-form">
+              <label>
+                Payment date
+                <input type="date" name="paymentDate" required>
+              </label>
+              <label>
+                Description
+                <input type="text" name="description" list="schoolDescriptions" placeholder="Exam fees, tuition..." required>
+              </label>
+              <label>
+                Amount
+                <input type="number" name="amount" min="0" step="0.01" required>
+              </label>
+              <button type="submit">Add school payment</button>
+            </form>
+            <datalist id="schoolDescriptions">
+              <option value="Exam fees"></option>
+              <option value="Resit for exam"></option>
+              <option value="uol account"></option>
+              <option value="maths tuition"></option>
+              <option value="tuition"></option>
+              <option value="year 2 sch fees"></option>
+              <option value="year 1 sch fees"></option>
+              <option value="tuiton"></option>
+              <option value="vle"></option>
+              <option value="exam fees"></option>
+            </datalist>
+          </section>
+
+          <section class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">School history</p>
+                <h3>School fee payments log</h3>
+              </div>
+              <button type="button" class="ghost-button" id="resetSchool">Reset school data</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date added</th>
+                    <th>Payment date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="schoolTableBody"></tbody>
+              </table>
+            </div>
+          </section>
         </section>
       </section>
     </main>
